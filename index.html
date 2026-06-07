@@ -1115,7 +1115,7 @@
 
     <!-- ── Supabase ── -->
     <script type="module">
-      import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+      import { createClient } from "https://esm.sh/@supabase/supabase-js";
       import { SUPABASE_CONFIG } from "./config.js";
 
       const sb = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
@@ -1598,6 +1598,16 @@
       document.getElementById("delete-modal").addEventListener("click", (e) => {
         if (e.target === e.currentTarget) closeModal();
       });
+
+      window.navigate = navigate;
+      window.navigateEdit = navigateEdit;
+      window.handleLogout = handleLogout;
+      window.filterWines = filterWines;
+      window.updatePreview = updatePreview;
+      window.handleFormSubmit = handleFormSubmit;
+      window.openDeleteModal = openDeleteModal;
+      window.closeModal = closeModal;
+      window.confirmDelete = confirmDelete;
 
       // ── UTILS ─────────────────────────────────────────────────────────────────
       function esc(str) {
