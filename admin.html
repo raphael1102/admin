@@ -1,0 +1,1625 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — IJ's Wine Shop</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0f0e0d;
+        --card: #161412;
+        --sidebar-bg: #111010;
+        --border: rgba(210, 200, 180, 0.09);
+        --border-s: rgba(210, 200, 180, 0.18);
+        --ink: #ede8df;
+        --ink-light: #c8c2b4;
+        --ink-muted: #6b6558;
+        --gold: #c9a84c;
+        --gold-dim: rgba(201, 168, 76, 0.1);
+        --gold-hover: #dfc06a;
+        --accent: rgba(201, 168, 76, 0.08);
+        --destructive: #c0392b;
+        --dest-dim: rgba(192, 57, 43, 0.12);
+        --radius: 6px;
+        --font-d: "Quicksand", Georgia, serif;
+        --font-ui: "Jost", system-ui, sans-serif;
+      }
+
+      body {
+        font-family: var(--font-ui);
+        background: var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        display: flex;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: 220px;
+        flex-shrink: 0;
+        background: var(--sidebar-bg);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+      }
+
+      .sidebar-brand {
+        padding: 24px 20px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .sidebar-brand .eyebrow {
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .sidebar-brand h1 {
+        font-family: var(--font-d);
+        font-size: 24px;
+        font-style: normal;
+        color: var(--ink);
+        margin-top: 4px;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: var(--radius);
+        font-size: 12.5px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--ink-muted);
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: left;
+        transition:
+          color 150ms ease,
+          background 150ms ease;
+      }
+
+      .nav-item svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+
+      .nav-item:hover {
+        color: var(--ink-light);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .nav-item.active {
+        color: var(--gold);
+        background: var(--accent);
+      }
+
+      .sidebar-footer {
+        border-top: 1px solid var(--border);
+        padding: 10px;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        flex: 1;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      .main-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 32px;
+      }
+
+      /* ── VIEWS ── */
+      .view {
+        display: none;
+      }
+      .view.active {
+        display: block;
+      }
+
+      /* ── PAGE HEADER ── */
+      .page-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 36px;
+      }
+
+      .page-header .eyebrow {
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 8px;
+      }
+
+      .page-title {
+        font-family: var(--font-d);
+        font-size: 40px;
+        font-style: normal;
+        color: var(--ink);
+        line-height: 1;
+        font-weight: 400;
+      }
+
+      /* ── BUTTONS ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        border-radius: var(--radius);
+        font-family: var(--font-ui);
+        font-size: 9.5px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: none;
+        transition:
+          background 200ms ease,
+          transform 150ms ease;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .btn-gold {
+        background: var(--gold);
+        color: #0f0e0d;
+      }
+      .btn-gold:hover:not(:disabled) {
+        background: var(--gold-hover);
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border-s);
+        color: var(--ink-light);
+      }
+      .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: none;
+        color: var(--ink-muted);
+        padding: 7px 8px;
+      }
+      .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--ink-light);
+      }
+
+      .btn-danger {
+        background: var(--destructive);
+        color: #fff;
+      }
+      .btn-danger:hover:not(:disabled) {
+        background: #a93226;
+      }
+
+      /* ── STATS GRID ── */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 36px;
+      }
+
+      .stat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 20px;
+      }
+
+      .stat-label {
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+      }
+
+      .stat-value {
+        font-family: var(--font-d);
+        font-size: 32px;
+        color: var(--ink);
+        margin-top: 10px;
+        font-style: normal;
+      }
+
+      /* ── CARD ── */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 22px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .card-header-label {
+        font-size: 8.5px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+      }
+
+      .card-link {
+        font-size: 11px;
+        color: var(--gold);
+        text-decoration: none;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: var(--font-ui);
+      }
+      .card-link:hover {
+        text-decoration: underline;
+      }
+
+      /* ── RECENT LIST ── */
+      .recent-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 22px;
+        border-bottom: 1px solid var(--border);
+      }
+      .recent-row:last-child {
+        border-bottom: none;
+      }
+
+      .thumb {
+        width: 44px;
+        height: 44px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .recent-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .recent-name {
+        font-family: var(--font-d);
+        font-size: 14px;
+        color: var(--ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .recent-meta {
+        font-size: 11px;
+        color: var(--ink-muted);
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .recent-price {
+        font-family: var(--font-d);
+        font-size: 13px;
+        color: var(--gold);
+        flex-shrink: 0;
+      }
+
+      /* ── SEARCH ── */
+      .search-wrap {
+        position: relative;
+        max-width: 320px;
+        margin-bottom: 24px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        color: var(--ink-muted);
+        pointer-events: none;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 9px 13px 9px 34px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-s);
+        border-radius: var(--radius);
+        color: var(--ink);
+        font-family: var(--font-ui);
+        font-size: 13px;
+        font-weight: 300;
+        outline: none;
+        transition: border-color 150ms ease;
+      }
+      .search-input:focus {
+        border-color: var(--gold);
+      }
+      .search-input::placeholder {
+        color: var(--ink-muted);
+        font-style: normal;
+      }
+
+      /* ── TABLE ── */
+      .table-wrap {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .table-scroll {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      thead tr {
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        padding: 12px 18px;
+        text-align: left;
+        font-size: 8.5px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        white-space: nowrap;
+      }
+
+      td {
+        padding: 12px 18px;
+        color: var(--ink-muted);
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      tbody tr {
+        transition: background 150ms ease;
+      }
+      tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .td-wine {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .td-name {
+        font-family: var(--font-d);
+        font-size: 14px;
+        color: var(--ink);
+      }
+
+      .td-price {
+        color: var(--gold);
+        font-family: var(--font-d);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .badge-stock {
+        background: rgba(201, 168, 76, 0.12);
+        color: var(--gold);
+        border: 1px solid rgba(201, 168, 76, 0.28);
+      }
+      .badge-out {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--ink-muted);
+        border: 1px solid var(--border-s);
+      }
+      .badge-featured {
+        background: transparent;
+        color: var(--gold);
+        border: 1px solid rgba(201, 168, 76, 0.38);
+      }
+
+      .actions {
+        display: flex;
+        gap: 4px;
+        justify-content: flex-end;
+      }
+
+      .empty-state {
+        padding: 48px 24px;
+        text-align: center;
+        color: var(--ink-muted);
+        font-size: 13px;
+      }
+
+      /* ── FORM ── */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 260px;
+        gap: 32px;
+        align-items: start;
+      }
+
+      .form-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .field-full {
+        grid-column: 1 / -1;
+      }
+
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field-label {
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+      }
+
+      .field-label span {
+        color: var(--gold);
+        margin-left: 2px;
+      }
+
+      .field-input,
+      .field-textarea {
+        width: 100%;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-s);
+        border-radius: var(--radius);
+        color: var(--ink);
+        font-family: var(--font-ui);
+        font-size: 13.5px;
+        font-weight: 300;
+        outline: none;
+        transition:
+          border-color 150ms ease,
+          background 150ms ease;
+      }
+
+      .field-input:focus,
+      .field-textarea:focus {
+        border-color: var(--gold);
+        background: rgba(201, 168, 76, 0.04);
+      }
+
+      .field-input::placeholder,
+      .field-textarea::placeholder {
+        color: var(--ink-muted);
+        font-style: normal;
+      }
+
+      .field-textarea {
+        resize: vertical;
+        min-height: 90px;
+      }
+
+      .field-error {
+        font-size: 11px;
+        color: var(--destructive);
+      }
+
+      /* toggle switches */
+      .toggles {
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+
+      .toggle-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .toggle-label {
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        cursor: pointer;
+      }
+
+      .toggle {
+        appearance: none;
+        width: 38px;
+        height: 21px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border-s);
+        position: relative;
+        cursor: pointer;
+        transition:
+          background 200ms ease,
+          border-color 200ms ease;
+        flex-shrink: 0;
+      }
+
+      .toggle::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: var(--ink-muted);
+        transition:
+          transform 200ms ease,
+          background 200ms ease;
+      }
+
+      .toggle:checked {
+        background: var(--gold-dim);
+        border-color: var(--gold);
+      }
+
+      .toggle:checked::after {
+        transform: translateX(17px);
+        background: var(--gold);
+      }
+
+      /* preview panel */
+      .preview-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .preview-label {
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+      }
+
+      .preview-img {
+        aspect-ratio: 3/4;
+        border: 1px solid var(--border-s);
+        border-radius: var(--radius);
+        background: var(--card);
+        overflow: hidden;
+      }
+
+      .preview-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .preview-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink-muted);
+        font-size: 12px;
+      }
+
+      .preview-info {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+
+      .preview-name {
+        font-family: var(--font-d);
+        font-size: 17px;
+        color: var(--ink);
+      }
+
+      .preview-meta {
+        font-size: 11px;
+        color: var(--ink-muted);
+        margin-top: 4px;
+      }
+
+      .preview-price {
+        font-family: var(--font-d);
+        font-size: 15px;
+        color: var(--gold);
+        margin-top: 10px;
+      }
+
+      .preview-price span {
+        font-size: 10px;
+        color: var(--ink-muted);
+        font-family: var(--font-ui);
+      }
+
+      .form-footer {
+        display: flex;
+        gap: 12px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        margin-top: 8px;
+      }
+
+      /* ── MODAL ── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 500;
+        padding: 24px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease;
+      }
+
+      .modal-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .modal {
+        background: var(--card);
+        border: 1px solid var(--border-s);
+        border-radius: var(--radius);
+        padding: 28px;
+        width: 100%;
+        max-width: 420px;
+        transform: translateY(8px);
+        transition: transform 200ms ease;
+      }
+
+      .modal-overlay.open .modal {
+        transform: translateY(0);
+      }
+
+      .modal-title {
+        font-family: var(--font-d);
+        font-size: 20px;
+        color: var(--ink);
+        margin-bottom: 10px;
+      }
+
+      .modal-desc {
+        font-size: 13px;
+        color: var(--ink-muted);
+        line-height: 1.6;
+        margin-bottom: 24px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 18px;
+        border-radius: var(--radius);
+        font-size: 13px;
+        color: #fff;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition:
+          opacity 250ms ease,
+          transform 250ms ease;
+        pointer-events: none;
+        z-index: 9999;
+        max-width: 320px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: #1f4f3a;
+        border: 1px solid #2d6a4f;
+      }
+      .toast.error {
+        background: #5c1f1f;
+        border: 1px solid #7d2a2a;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 860px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .preview-panel {
+          display: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .sidebar {
+          display: none;
+        }
+        .main-inner {
+          padding: 24px 16px;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .field-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <p class="eyebrow">IJ's Wine Shop</p>
+        <h1>Admin</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <button
+          class="nav-item active"
+          data-view="dashboard"
+          onclick="navigate('dashboard')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+          </svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-view="add" onclick="navigate('add')">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8" y1="12" x2="16" y2="12" />
+          </svg>
+          Add Wine
+        </button>
+        <button
+          class="nav-item"
+          data-view="inventory"
+          onclick="navigate('inventory')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"
+            />
+          </svg>
+          Inventory
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="nav-item" onclick="handleLogout()">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+      <div class="main-inner">
+        <!-- ═══ DASHBOARD ═══ -->
+        <div class="view active" id="view-dashboard">
+          <div class="page-header">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h2 class="page-title">Dashboard</h2>
+            </div>
+            <button class="btn btn-gold" onclick="navigate('add')">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              Add Wine
+            </button>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <p class="stat-label">Total Wines</p>
+              <p class="stat-value" id="stat-total">—</p>
+            </div>
+            <div class="stat-card">
+              <p class="stat-label">In Stock</p>
+              <p class="stat-value" id="stat-stock">—</p>
+            </div>
+            <div class="stat-card">
+              <p class="stat-label">Featured</p>
+              <p class="stat-value" id="stat-featured">—</p>
+            </div>
+            <div class="stat-card">
+              <p class="stat-label">Catalogue Value</p>
+              <p class="stat-value" id="stat-value">—</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-header-label">Recently Added</span>
+              <button class="card-link" onclick="navigate('inventory')">
+                View all
+              </button>
+            </div>
+            <div id="recent-list"><div class="empty-state">Loading…</div></div>
+          </div>
+        </div>
+
+        <!-- ═══ INVENTORY ═══ -->
+        <div class="view" id="view-inventory">
+          <div class="page-header">
+            <div>
+              <p class="eyebrow">Collection</p>
+              <h2 class="page-title">Inventory</h2>
+            </div>
+            <button class="btn btn-gold" onclick="navigate('add')">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              Add Wine
+            </button>
+          </div>
+
+          <div class="search-wrap">
+            <svg
+              class="search-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="search-input"
+              class="search-input"
+              placeholder="Search wines…"
+              oninput="filterWines()"
+            />
+          </div>
+
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Wine</th>
+                    <th>Type</th>
+                    <th>Region · Vintage</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th style="text-align: right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inventory-tbody">
+                  <tr>
+                    <td colspan="6" class="empty-state">Loading…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ ADD WINE ═══ -->
+        <div class="view" id="view-add">
+          <div class="page-header">
+            <div>
+              <p class="eyebrow">New Bottle</p>
+              <h2 class="page-title">Add Wine</h2>
+            </div>
+          </div>
+          <div id="add-form-wrap"></div>
+        </div>
+
+        <!-- ═══ EDIT WINE ═══ -->
+        <div class="view" id="view-edit">
+          <div class="page-header">
+            <div>
+              <p class="eyebrow">Edit</p>
+              <h2 class="page-title" id="edit-page-title">Edit Wine</h2>
+            </div>
+          </div>
+          <div id="edit-form-wrap"></div>
+        </div>
+      </div>
+      <!-- /main-inner -->
+    </main>
+
+    <!-- ── DELETE MODAL ── -->
+    <div class="modal-overlay" id="delete-modal">
+      <div class="modal">
+        <p class="modal-title">Delete this wine?</p>
+        <p class="modal-desc" id="modal-desc">
+          This bottle will be permanently removed from your catalogue.
+        </p>
+        <div class="modal-actions">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button
+            class="btn btn-danger"
+            id="modal-confirm-btn"
+            onclick="confirmDelete()"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- ── Supabase ── -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+      // ── CONFIG — replace with your values ────────────────────────────────────
+      const supabaseUrl = "https://iyzoirvvtmrhbblhrhnn.supabase.co";
+      const supabaseAnonKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5em9pcnZ2dG1yaGJibGhyaG5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NjMxNjAsImV4cCI6MjA5NjMzOTE2MH0.XhrQXof__TCRLtSfYSD09PV2cuMqGm8SyOt5I-l4TQA";
+
+      // ─────────────────────────────────────────────────────────────────────────
+
+      const { createClient } = supabase;
+      const sb = createClient(supabaseUrl, supabaseAnonKey);
+
+      // ── STATE ─────────────────────────────────────────────────────────────────
+      let allWines = [];
+      let pendingDel = null;
+      let editingId = null;
+
+      // ── AUTH GUARD ────────────────────────────────────────────────────────────
+      (async () => {
+        const {
+          data: { session },
+        } = await sb.auth.getSession();
+        if (!session) {
+          window.location.href = "login.html";
+          return;
+        }
+        loadWines();
+      })();
+
+      // ── NAVIGATION ────────────────────────────────────────────────────────────
+      function navigate(view) {
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => v.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+
+        document.getElementById(`view-${view}`).classList.add("active");
+        const btn = document.querySelector(`[data-view="${view}"]`);
+        if (btn) btn.classList.add("active");
+
+        if (view === "add") renderForm("add");
+      }
+
+      function navigateEdit(id) {
+        editingId = id;
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => v.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document.getElementById("view-edit").classList.add("active");
+
+        const wine = allWines.find((w) => w.id === id);
+        document.getElementById("edit-page-title").textContent = wine
+          ? wine.name
+          : "Edit Wine";
+        renderForm("edit", wine);
+      }
+
+      // ── LOGOUT ────────────────────────────────────────────────────────────────
+      async function handleLogout() {
+        await sb.auth.signOut();
+        window.location.href = "login.html";
+      }
+
+      // ── TOAST ─────────────────────────────────────────────────────────────────
+      function showToast(msg, type = "success") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = `toast ${type} show`;
+        setTimeout(() => {
+          t.className = "toast";
+        }, 3200);
+      }
+
+      // ── LOAD WINES ────────────────────────────────────────────────────────────
+      async function loadWines() {
+        const { data, error } = await sb
+          .from("products")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          showToast("Failed to load wines", "error");
+          return;
+        }
+
+        allWines = data ?? [];
+        renderDashboard();
+        renderInventory();
+      }
+
+      // ── DASHBOARD ─────────────────────────────────────────────────────────────
+      function renderDashboard() {
+        const total = allWines.length;
+        const inStock = allWines.filter((w) => w.in_stock).length;
+        const featured = allWines.filter((w) => w.featured).length;
+        const value = allWines.reduce((s, w) => s + (w.price ?? 0), 0);
+
+        document.getElementById("stat-total").textContent = total;
+        document.getElementById("stat-stock").textContent = inStock;
+        document.getElementById("stat-featured").textContent = featured;
+        document.getElementById("stat-value").textContent =
+          `₦${value.toLocaleString()}`;
+
+        const list = document.getElementById("recent-list");
+        if (allWines.length === 0) {
+          list.innerHTML = `<div class="empty-state">No wines yet. Add your first bottle.</div>`;
+          return;
+        }
+
+        list.innerHTML = allWines
+          .slice(0, 5)
+          .map(
+            (w) => `
+    <div class="recent-row">
+      <div class="thumb">${w.image_url ? `<img src="${esc(w.image_url)}" alt="${esc(w.name)}" />` : ""}</div>
+      <div class="recent-info">
+        <p class="recent-name">${esc(w.name)}</p>
+        <p class="recent-meta">${esc([w.region, w.vintage].filter(Boolean).join(" · ") || "—")}</p>
+      </div>
+      <p class="recent-price">${w.price != null ? `₦${w.price.toLocaleString()}` : "—"}</p>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      // ── INVENTORY ─────────────────────────────────────────────────────────────
+      function filterWines() {
+        renderInventory(
+          document.getElementById("search-input").value.trim().toLowerCase(),
+        );
+      }
+
+      function renderInventory(q = "") {
+        const filtered = q
+          ? allWines.filter((w) =>
+              [w.name, w.type, w.region, w.varietal, w.tag]
+                .filter(Boolean)
+                .some((v) => v.toLowerCase().includes(q)),
+            )
+          : allWines;
+
+        const tbody = document.getElementById("inventory-tbody");
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="empty-state">${q ? "No wines match your search." : "No wines yet."}</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = filtered
+          .map(
+            (w) => `
+    <tr>
+      <td>
+        <div class="td-wine">
+          <div class="thumb">${w.image_url ? `<img src="${esc(w.image_url)}" alt="${esc(w.name)}" />` : ""}</div>
+          <span class="td-name">${esc(w.name)}</span>
+        </div>
+      </td>
+      <td>${esc(w.type ?? "—")}</td>
+      <td>${esc([w.region, w.vintage].filter(Boolean).join(" · ") || "—")}</td>
+      <td class="td-price">${w.price != null ? `₦${w.price.toLocaleString()}` : "—"}</td>
+      <td>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <span class="badge ${w.in_stock ? "badge-stock" : "badge-out"}">${w.in_stock ? "In Stock" : "Out"}</span>
+          ${w.featured ? `<span class="badge badge-featured">Featured</span>` : ""}
+        </div>
+      </td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="navigateEdit(${w.id})" title="Edit ${esc(w.name)}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn btn-ghost" style="color:#c0392b" onclick="openDeleteModal(${w.id}, '${esc(w.name)}')" title="Delete ${esc(w.name)}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `,
+          )
+          .join("");
+      }
+
+      // ── FORM BUILDER ──────────────────────────────────────────────────────────
+      function renderForm(mode, wine = null) {
+        const wrapId = mode === "add" ? "add-form-wrap" : "edit-form-wrap";
+        const wrap = document.getElementById(wrapId);
+
+        const v = (field, fallback = "") =>
+          wine && wine[field] != null ? String(wine[field]) : fallback;
+
+        wrap.innerHTML = `
+    <form id="${mode}-form" onsubmit="handleFormSubmit(event, '${mode}')">
+      <div class="form-grid">
+        <div class="form-fields">
+          <div class="field-row">
+            <div class="field-group field-full">
+              <label class="field-label" for="${mode}-name">Name <span>*</span></label>
+              <input class="field-input" id="${mode}-name" name="name" value="${esc(v("name"))}" placeholder="e.g. Martell VSOP" required />
+              <span class="field-error" id="${mode}-err-name"></span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="${mode}-type">Type</label>
+              <input class="field-input" id="${mode}-type" name="type" value="${esc(v("type"))}" placeholder="Red, Sparkling, Whisky…" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="${mode}-varietal">Varietal</label>
+              <input class="field-input" id="${mode}-varietal" name="varietal" value="${esc(v("varietal"))}" placeholder="Pinot Noir, Cava…" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="${mode}-region">Region</label>
+              <input class="field-input" id="${mode}-region" name="region" value="${esc(v("region"))}" placeholder="France, Spain…" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="${mode}-vintage">Vintage <span>*</span></label>
+              <input class="field-input" id="${mode}-vintage" name="vintage" value="${esc(v("vintage"))}" placeholder="NV, 2019…" required />
+              <span class="field-error" id="${mode}-err-vintage"></span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="${mode}-style">Style</label>
+              <input class="field-input" id="${mode}-style" name="style" value="${esc(v("style"))}" placeholder="Brut, Balanced…" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="${mode}-tag">Tag</label>
+              <input class="field-input" id="${mode}-tag" name="tag" value="${esc(v("tag"))}" placeholder="Cava, Scotch…" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="${mode}-price">Price (₦)</label>
+              <input class="field-input" id="${mode}-price" name="price" inputmode="decimal" value="${esc(v("price"))}" placeholder="52000" />
+              <span class="field-error" id="${mode}-err-price"></span>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="${mode}-abv">ABV (%) <span>*</span></label>
+              <input class="field-input" id="${mode}-abv" name="abv" inputmode="decimal" value="${esc(v("abv"))}" placeholder="40" required />
+              <span class="field-error" id="${mode}-err-abv"></span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="${mode}-volume">Volume (ml)</label>
+              <input class="field-input" id="${mode}-volume" name="volume_ml" inputmode="numeric" value="${esc(v("volume_ml"))}" placeholder="750" />
+              <span class="field-error" id="${mode}-err-volume"></span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="${mode}-image">Image URL</label>
+            <input class="field-input" id="${mode}-image" name="image_url" value="${esc(v("image_url"))}"
+              placeholder="https://…"
+              oninput="updatePreview('${mode}')" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="${mode}-desc">Description</label>
+            <textarea class="field-textarea" id="${mode}-desc" name="description" placeholder="Tasting notes…">${esc(v("description"))}</textarea>
+          </div>
+
+          <div class="toggles">
+            <div class="toggle-wrap">
+              <input type="checkbox" class="toggle" id="${mode}-in_stock" name="in_stock" ${wine ? (wine.in_stock ? "checked" : "") : "checked"} />
+              <label class="toggle-label" for="${mode}-in_stock">In Stock</label>
+            </div>
+            <div class="toggle-wrap">
+              <input type="checkbox" class="toggle" id="${mode}-featured" name="featured" ${wine?.featured ? "checked" : ""} />
+              <label class="toggle-label" for="${mode}-featured">Featured</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- preview -->
+        <div class="preview-panel">
+          <p class="preview-label">Preview</p>
+          <div class="preview-img" id="${mode}-preview-img">
+            ${v("image_url") ? `<img src="${esc(v("image_url"))}" id="${mode}-img-el" />` : `<div class="preview-placeholder" id="${mode}-img-el">No image</div>`}
+          </div>
+          <div class="preview-info">
+            <p class="preview-name" id="${mode}-prev-name">${esc(v("name") || "Untitled")}</p>
+            <p class="preview-meta" id="${mode}-prev-meta">${esc([v("region"), v("vintage")].filter(Boolean).join(" · ") || "—")}</p>
+            <p class="preview-price" id="${mode}-prev-price" style="${v("price") ? "" : "display:none"}">
+              ₦${Number(v("price") || 0).toLocaleString()} <span>/ bottle</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="btn btn-gold" id="${mode}-submit-btn">
+          ${mode === "add" ? "Add Wine" : "Save Changes"}
+        </button>
+        <button type="button" class="btn btn-outline" onclick="navigate('inventory')">Cancel</button>
+      </div>
+    </form>
+  `;
+
+        // live preview for name and price
+        document
+          .getElementById(`${mode}-name`)
+          .addEventListener("input", () => updatePreview(mode));
+        document
+          .getElementById(`${mode}-price`)
+          .addEventListener("input", () => updatePreview(mode));
+        document
+          .getElementById(`${mode}-region`)
+          .addEventListener("input", () => updatePreview(mode));
+        document
+          .getElementById(`${mode}-vintage`)
+          .addEventListener("input", () => updatePreview(mode));
+      }
+
+      function updatePreview(mode) {
+        const name = document.getElementById(`${mode}-name`).value;
+        const price = document.getElementById(`${mode}-price`).value;
+        const region = document.getElementById(`${mode}-region`).value;
+        const vintage = document.getElementById(`${mode}-vintage`).value;
+        const imgUrl = document.getElementById(`${mode}-image`).value.trim();
+
+        document.getElementById(`${mode}-prev-name`).textContent =
+          name || "Untitled";
+        document.getElementById(`${mode}-prev-meta`).textContent =
+          [region, vintage].filter(Boolean).join(" · ") || "—";
+
+        const priceEl = document.getElementById(`${mode}-prev-price`);
+        if (price.trim()) {
+          priceEl.style.display = "";
+          priceEl.innerHTML = `₦${Number(price || 0).toLocaleString()} <span>/ bottle</span>`;
+        } else {
+          priceEl.style.display = "none";
+        }
+
+        const imgWrap = document.getElementById(`${mode}-preview-img`);
+        if (imgUrl) {
+          imgWrap.innerHTML = `<img src="${esc(imgUrl)}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'" />`;
+        } else {
+          imgWrap.innerHTML = `<div class="preview-placeholder">No image</div>`;
+        }
+      }
+
+      // ── FORM SUBMIT ───────────────────────────────────────────────────────────
+      async function handleFormSubmit(e, mode) {
+        e.preventDefault();
+
+        // clear errors
+        ["name", "vintage", "abv", "price", "volume"].forEach((f) => {
+          const el = document.getElementById(`${mode}-err-${f}`);
+          if (el) el.textContent = "";
+        });
+
+        const get = (id) => document.getElementById(`${mode}-${id}`);
+
+        const name = get("name").value.trim();
+        const vintage = get("vintage").value.trim();
+        const abvRaw = get("abv").value.trim();
+        const priceRaw = get("price").value.trim();
+        const volRaw = get("volume").value.trim();
+
+        let valid = true;
+
+        if (!name) {
+          document.getElementById(`${mode}-err-name`).textContent =
+            "Name is required";
+          valid = false;
+        }
+        if (!vintage) {
+          document.getElementById(`${mode}-err-vintage`).textContent =
+            "Vintage is required";
+          valid = false;
+        }
+        if (abvRaw === "" || isNaN(Number(abvRaw))) {
+          document.getElementById(`${mode}-err-abv`).textContent =
+            "ABV is required";
+          valid = false;
+        }
+        if (priceRaw !== "" && isNaN(Number(priceRaw))) {
+          document.getElementById(`${mode}-err-price`).textContent =
+            "Price must be a number";
+          valid = false;
+        }
+        if (volRaw !== "" && isNaN(Number(volRaw))) {
+          document.getElementById(`${mode}-err-volume`).textContent =
+            "Volume must be a number";
+          valid = false;
+        }
+        if (!valid) return;
+
+        const payload = {
+          name,
+          vintage,
+          abv: Number(abvRaw),
+          price: priceRaw === "" ? null : Number(priceRaw),
+          volume_ml: volRaw === "" ? null : Number(volRaw),
+          type: nullify(get("type").value),
+          region: nullify(get("region").value),
+          varietal: nullify(get("varietal").value),
+          style: nullify(get("style").value),
+          tag: nullify(get("tag").value),
+          image_url: nullify(get("image").value),
+          description: nullify(get("desc").value),
+          in_stock: get("in_stock").checked,
+          featured: get("featured").checked,
+        };
+
+        const btn = document.getElementById(`${mode}-submit-btn`);
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+
+        let error;
+
+        if (mode === "add") {
+          ({ error } = await sb.from("products").insert(payload));
+        } else {
+          ({ error } = await sb
+            .from("products")
+            .update(payload)
+            .eq("id", editingId));
+        }
+
+        btn.disabled = false;
+        btn.textContent = mode === "add" ? "Add Wine" : "Save Changes";
+
+        if (error) {
+          showToast(error.message || "Failed to save wine", "error");
+          return;
+        }
+
+        showToast(mode === "add" ? `${name} added` : `${name} updated`);
+        await loadWines();
+        navigate("inventory");
+      }
+
+      // ── DELETE ────────────────────────────────────────────────────────────────
+      function openDeleteModal(id, name) {
+        pendingDel = id;
+        document.getElementById("modal-desc").textContent =
+          `"${name}" will be permanently removed from your catalogue.`;
+        document.getElementById("delete-modal").classList.add("open");
+      }
+
+      function closeModal() {
+        pendingDel = null;
+        document.getElementById("delete-modal").classList.remove("open");
+      }
+
+      async function confirmDelete() {
+        if (!pendingDel) return;
+        const btn = document.getElementById("modal-confirm-btn");
+        btn.disabled = true;
+        btn.textContent = "Deleting…";
+
+        const { error } = await sb
+          .from("products")
+          .delete()
+          .eq("id", pendingDel);
+
+        btn.disabled = false;
+        btn.textContent = "Delete";
+
+        if (error) {
+          showToast(error.message || "Failed to delete", "error");
+          return;
+        }
+
+        const name = allWines.find((w) => w.id === pendingDel)?.name ?? "Wine";
+        showToast(`${name} deleted`);
+        closeModal();
+        await loadWines();
+      }
+
+      // close modal on overlay click
+      document.getElementById("delete-modal").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) closeModal();
+      });
+
+      // ── UTILS ─────────────────────────────────────────────────────────────────
+      function esc(str) {
+        if (str == null) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function nullify(v) {
+        const t = String(v ?? "").trim();
+        return t === "" ? null : t;
+      }
+    </script>
+  </body>
+</html>
