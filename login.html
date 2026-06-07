@@ -246,16 +246,11 @@
     <div class="toast" id="toast"></div>
 
     <!-- ── Supabase ── -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script>
-      // ── CONFIG — replace with your values ──────────────────────────────────
-      const supabaseUrl = "https://iyzoirvvtmrhbblhrhnn.supabase.co";
-      const supabaseAnonKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5em9pcnZ2dG1yaGJibGhyaG5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NjMxNjAsImV4cCI6MjA5NjMzOTE2MH0.XhrQXof__TCRLtSfYSD09PV2cuMqGm8SyOt5I-l4TQA";
-      // ────────────────────────────────────────────────────────────────────────
+    <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+      import { SUPABASE_CONFIG } from './config.js';
 
-      const { createClient } = supabase;
-      const sb = createClient(supabaseUrl, supabaseAnonKey);
+      const sb = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
       // Redirect if already logged in
       (async () => {
@@ -315,7 +310,7 @@
         showToast("Welcome back");
 
         setTimeout(() => {
-          window.location.href = "index.html";
+          window.location.href = "admin.html";
         }, 600);
       });
     </script>
