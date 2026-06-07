@@ -257,7 +257,7 @@
         const {
           data: { session },
         } = await sb.auth.getSession();
-        if (session) window.location.href = "admin.html";
+        if (session) window.location.href = "index.html";
       })();
 
       // ── Toast helper ────────────────────────────────────────────────────────
@@ -310,7 +310,7 @@
         showToast("Welcome back");
 
         setTimeout(() => {
-          window.location.href = "admin.html";
+          window.location.href = "index.html";
         }, 600);
       });
     </script>
